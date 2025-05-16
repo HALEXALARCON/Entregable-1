@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
-import { user } from './models/user.model';
+import { User } from './models/User.model';
+import { PetPost } from './models/Pet-post-model';
 
 interface Options {
   host: string;
@@ -51,7 +52,7 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       synchronize: true,
-      entities: [user],
+      entities: [User, PetPost],
       ssl: {
         rejectUnauthorized: false,
       },

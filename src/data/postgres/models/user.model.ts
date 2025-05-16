@@ -8,14 +8,13 @@ export enum userRole {
 
 
 @Entity()
-export class user extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column("varchar", {
     length: 150,
   })
-
   name: string;
 
   @Column("varchar", {
@@ -23,36 +22,31 @@ export class user extends BaseEntity {
     unique: true,
     nullable: false,
   })
-
   email: string;
 
   @Column("varchar", {
     length: 255,
     nullable: false,
   })
-
   password: string;
 
   @Column("enum", {
     enum: userRole,
     default: userRole.USER,
   })
-
   user: userRole;
 
   @Column("boolean", {
     nullable: false,
     default: true,
   })
-
   status: boolean;
 
   @Column('timestamp', {
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-
-  createt_at: Date;
+  created_at: Date;
 
 }
 
