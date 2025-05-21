@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { PostgresDatabase } from "./data";
 import { envs } from "./config/env";
-import { AppRoutes } from "./presentation/Routes";
+import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
 
 

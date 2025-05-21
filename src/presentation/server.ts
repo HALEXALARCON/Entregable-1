@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express, { Request, Response, Router } from "express";
 
 interface Options {
   port: number;
@@ -21,10 +21,13 @@ export class Server {
     this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use(this.routes);
+    // this.app.all('*', (req: Request, res: Response) => {
+    //   res.status(404).json({ message: 'Not found' });
+    // });
 
     this.app.listen(this.port, () => {
-      console.log(`Server running on port ${this.port}`)
-    })
+      console.log(`Server running on port ${this.port}`);
+    });
   }
 
 }

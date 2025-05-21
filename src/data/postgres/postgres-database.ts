@@ -44,6 +44,7 @@ export class PostgresDatabase {
    * @param options.database - Nombre de la base de datos.
    */
   constructor(options: Options) {
+    // console.log('options', options)
     this.datasource = new DataSource({
       type: 'postgres',
       host: options.host,
