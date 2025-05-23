@@ -1,17 +1,19 @@
 import { User } from "../../../data";
 
-
 export class FinderUserService {
 
-  async executeByfindAll() {
-
+  async executeByFindAll(): Promise<User[]> {
     return await User.find({
-      select: ['id', 'name', 'email'],
-      where: {
-
-        status: true,
-
-      },
+      select: ["id", "name", "email"],
+      where: { status: true },
     });
+  }
+
+  async executeByFindOne(id: string): Promise<User> {
+    const user = await User.findOne({
+      where: { status: true, id },
+    });
+    if (!user) throw new Error("User not found");
+    return user;
   }
 }
