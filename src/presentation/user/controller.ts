@@ -26,7 +26,7 @@ export class UserController {
     }
   };
 
-  login = async (req: Request, res: Response): Promise<void> => {
+  login = async (req: Request, res: Response) => {
     try {
       const data = await this.loginUserService.execute(req.body);
       res.status(200).json(data);
@@ -38,7 +38,7 @@ export class UserController {
     }
   };
 
-  findAll = async (_req: Request, res: Response): Promise<void> => {
+  findAll = async (_req: Request, res: Response) => {
     try {
       const users = await this.finderUserService.executeByFindAll();
       res.status(200).json(users);
@@ -50,7 +50,7 @@ export class UserController {
     }
   };
 
-  findOne = async (req: Request, res: Response): Promise<void> => {
+  findOne = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const user = await this.finderUserService.executeByFindOne(id);
@@ -79,7 +79,7 @@ export class UserController {
     }
   };
 
-  delete = async (req: Request, res: Response): Promise<void> => {
+  delete = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const result = await this.deleteUserService.execute(id);
