@@ -1,4 +1,4 @@
-import { petPostStatus } from "../../../data";
+import { PetPost, petPostStatus } from "../../../data";
 import { FinderPetPostService } from "./finder.petpost.server";
 
 export class RejectedPetPostService {
@@ -13,7 +13,7 @@ export class RejectedPetPostService {
     const petPost = await this.finderPetPostService.executeByFindOne(id);
 
 
-    if (petPost.status === 'approved') {
+    if (PetPost.status === 'approved') {
       throw new Error('Pet post already approved');
     }
 

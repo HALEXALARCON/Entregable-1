@@ -48,5 +48,6 @@ export class PetPost extends BaseEntity {
     nullable: false,
   })
   created_at: Date;
+  static status: string;
 
 }

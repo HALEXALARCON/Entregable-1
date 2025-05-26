@@ -66,7 +66,7 @@ export class PetPostController {
     }
   };
 
-  // Método para borrar una publicación de mascota
+  // Método para rechazar una publicación de mascota
   rejected = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
