@@ -1,4 +1,5 @@
 import { PetPost, petPostStatus } from "../../../data";
+import { customError } from "../../../domain/errors";
 import { FinderPetPostService } from "./finder.petpost.server";
 
 
@@ -26,7 +27,7 @@ export class ApprovePetPostservice {
       return 'Pet post appoved successfully';
 
     } catch (error) {
-      throw new Error('Error approving pet post');
+      throw customError.internalServer('internal server error');
     }
   }
 }

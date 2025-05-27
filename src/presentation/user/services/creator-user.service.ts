@@ -1,4 +1,5 @@
 import { User } from "../../../data";
+import { customError } from "../../../domain/errors";
 
 export class CreatorUserService {
   async execute(data: any): Promise<User> {
@@ -16,8 +17,8 @@ export class CreatorUserService {
       // Intenta insertar el usuario en la base de datos
       return await user.save();
     } catch (err: any) {
-      // Registra el error completo en la consola
-      console.error("CreatorUserService.execute error:", err);
+
+      customError.internalServer('internal server error');
 
       // Lanza el error original para su manejo posterior
       throw err;

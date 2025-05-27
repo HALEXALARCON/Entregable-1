@@ -1,4 +1,5 @@
 import { PetPost, petPostStatus } from "../../../data";
+import { customError } from "../../../domain/errors";
 import { FinderPetPostService } from "./finder.petpost.server";
 
 export class RejectedPetPostService {
@@ -14,11 +15,11 @@ export class RejectedPetPostService {
 
 
     if (PetPost.status === 'approved') {
-      throw new Error('Pet post already approved');
+      throw customError.badRequest('Pet post already approved');
     }
 
     if (petPost.status === 'rejected') {
-      throw new Error('Pet post already rejected');
+      throw customError.badRequest('Pet post already rejected');
     }
 
 
@@ -32,7 +33,7 @@ export class RejectedPetPostService {
         message: 'Pet post rejected successfully',
       }
     } catch (error) {
-      throw new Error('Error rejecting pet post');
+      throw customError.internalServer('internal server error');
     }
   }
 }

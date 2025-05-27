@@ -1,4 +1,5 @@
 import { PetPost, petPostStatus } from "../../../data";
+import { customError } from "../../../domain/errors";
 
 
 export class FinderPetPostService {
@@ -23,7 +24,7 @@ export class FinderPetPostService {
     });
 
     if (!petPost) {
-      throw new Error('pet post not found');
+      throw customError.notFound('pet not found');
     }
 
     return petPost;

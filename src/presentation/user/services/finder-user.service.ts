@@ -1,4 +1,5 @@
 import { User } from "../../../data";
+import { customError } from "../../../domain/errors";
 
 export class FinderUserService {
 
@@ -13,7 +14,7 @@ export class FinderUserService {
     const user = await User.findOne({
       where: { status: true, id },
     });
-    if (!user) throw new Error("User not found");
+    if (!user) throw customError.notFound("User not found");
     return user;
   }
 }
