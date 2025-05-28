@@ -1,104 +1,98 @@
-import { Request, Response } from "express";
-import { CreatorPetPostService } from "./services/creator-pet-post.service";
-import { FinderPetPostService } from "./services/finder.petpost.server";
-import { ApprovePetPostservice } from "./services/aprove-pet-post.service";
-import { RejectedPetPostService } from "./services/reject-pet-post.service";
-import { ModifierPetPostService } from "./services/modifier-pet-post.service";
-import { DeletePetPostService } from "./services/delete-pet-post.services";
+import { Request, Response } from 'express';
+import { CreatorPetPostService } from './services/creator-pet-post.service';
+import { FinderPetPostService } from './services/finder.petpost.server';
+import { ApprovePetPostservice } from './services/aprove-pet-post.service';
+import { RejectedPetPostService } from './services/reject-pet-post.service';
+import { ModifierPetPostService } from './services/modifier-pet-post.service';
+import { DeletePetPostService } from './services/delete-pet-post.services';
+import { handleError } from '../user/common/errors/handleError';
 
 export class PetPostController {
   constructor(
     private readonly creatorPetPostService: CreatorPetPostService,
     private readonly finderPetPostService: FinderPetPostService,
-    private readonly aprovePetPostService: ApprovePetPostservice,
-    private readonly rejectedPetpostService: RejectedPetPostService,
+    private readonly approvePetPostService: ApprovePetPostservice,
+    private readonly rejectedPetPostService: RejectedPetPostService,
     private readonly modifierPetPostService: ModifierPetPostService,
     private readonly deletePetPostService: DeletePetPostService
   ) { }
 
-  // Método para crear una nueva publicación de mascota
-  create = async (req: Request, res: Response) => {
+  // Crear una nueva publicación de mascota
+  create = async (req: Request, res: Response): Promise<void> => {
     try {
       const petPost = await this.creatorPetPostService.execute(req.body);
-      res.status(200).json(petPost);
+      res.status(201).json(petPost);
     } catch (error) {
-      console.error("Error en create:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 
-  // Método para obtener todas las publicaciones de mascotas
-  findAll = async (_req: Request, res: Response) => {
+  // Obtener todas las publicaciones de mascotas
+  findAll = async (_req: Request, res: Response): Promise<void> => {
     try {
       const petPosts = await this.finderPetPostService.executeByFindAll();
       res.status(200).json(petPosts);
     } catch (error) {
-      console.error("Error en findAll:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 
-  // Método para obtener una publicación de mascota por ID
-  findOne = async (req: Request, res: Response) => {
-    const { id } = req.params;
+  // Obtener una publicación de mascota por ID
+  findOne = async (req: Request, res: Response): Promise<void> => {
     try {
+      const { id } = req.params;
       const petPost = await this.finderPetPostService.executeByFindOne(id);
       if (!petPost) {
         res.status(404).json({ message: 'Pet post not found' });
-      } else {
-        res.status(200).json(petPost);
+        return;
       }
-    } catch (error) {
-      console.error("Error en findOne:", error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-
-  // Método para aprobar una publicación de mascota
-  approve = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    try {
-      const petPost = await this.aprovePetPostService.execute(id);
       res.status(200).json(petPost);
     } catch (error) {
-      console.error("Error en approve:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 
-  // Método para rechazar una publicación de mascota
-  rejected = async (req: Request, res: Response) => {
-    const { id } = req.params;
+  // Aprobar una publicación de mascota
+  approve = async (req: Request, res: Response): Promise<void> => {
     try {
-      const petPost = await this.rejectedPetpostService.execute(id);
+      const { id } = req.params;
+      const petPost = await this.approvePetPostService.execute(id);
       res.status(200).json(petPost);
     } catch (error) {
-      console.error('Error en rejected:', error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 
-  // Método para actualizar una publicación de mascota
-  update = async (req: Request, res: Response) => {
-    const { id } = req.params;
+  // Rechazar una publicación de mascota
+  rejected = async (req: Request, res: Response): Promise<void> => {
     try {
+      const { id } = req.params;
+      const petPost = await this.rejectedPetPostService.execute(id);
+      res.status(200).json(petPost);
+    } catch (error) {
+      handleError(error, res);
+    }
+  };
+
+  // Actualizar una publicación de mascota
+  update = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
       const updatedPetPost = await this.modifierPetPostService.update(id, req.body);
       res.status(200).json(updatedPetPost);
     } catch (error) {
-      console.error("Error en update:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 
-  // Método para eliminar una publicación de mascota
-  delete = async (req: Request, res: Response) => {
-    const { id } = req.params;
+  // Eliminar una publicación de mascota
+  delete = async (req: Request, res: Response): Promise<void> => {
     try {
+      const { id } = req.params;
       const result = await this.deletePetPostService.execute(id);
       res.status(200).json(result);
     } catch (error) {
-      console.error("Error en delete:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      handleError(error, res);
     }
   };
 }
