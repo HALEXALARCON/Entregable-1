@@ -5,7 +5,7 @@ import { FinderUserService } from './services/finder-user.service';
 import { ModifierUserService } from './services/modifier-user.service';
 import { DeleteUserService } from './services/delete-user.service';
 import { handleError } from './common/errors/handleError';
-
+import { loginUserDto, RegisterUserDto } from '../../domain/errors';
 
 export class UserController {
   constructor(
@@ -17,8 +17,15 @@ export class UserController {
   ) { }
 
   register = async (req: Request, res: Response): Promise<void> => {
+    const [error, data] = RegisterUserDto.execute(req.body);
+
+    if (error) {
+      res.status(422).json({ message: error });
+      return;
+    }
+
     try {
-      const user = await this.creatorUserService.execute(req.body);
+      const user = await this.creatorUserService.execute(data!);
       res.status(201).json(user);
     } catch (error) {
       handleError(error, res);
@@ -26,9 +33,17 @@ export class UserController {
   };
 
   login = async (req: Request, res: Response): Promise<void> => {
+    console.log('Body recibido:', req.body);
+    const [error, loginData] = loginUserDto.execute(req.body);
+
+    if (error) {
+      res.status(422).json({ message: error });
+      return;
+    }
+
     try {
-      const data = await this.loginUserService.execute(req.body);
-      res.status(200).json(data);
+      const loginResult = await this.loginUserService.execute(loginData!);
+      res.status(200).json(loginResult);
     } catch (error) {
       handleError(error, res);
     }

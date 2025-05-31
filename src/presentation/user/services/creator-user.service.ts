@@ -1,15 +1,17 @@
+import { encriptAdapter } from "../../../config/bcrypt.adapter";
 import { User } from "../../../data";
-import { CustomError } from "../../../domain/errors";
+import { CustomError, RegisterUserDto } from "../../../domain/errors";
 
 
 export class CreatorUserService {
-  async execute(data: any): Promise<User> {
+  async execute(data: RegisterUserDto): Promise<User> {
     const user = new User();
 
     // Asigna los campos del DTO
-    user.name = data.name?.trim().toLowerCase();
-    user.email = data.email?.trim().toLowerCase();
-    user.password = data.password?.trim();
+    user.name = data.name.trim().toLowerCase();
+    user.email = data.email.trim().toLowerCase();
+    // Hace que se encripte la contraseña antes de guardarla en la base de datos
+    user.password = encriptAdapter.hash(data.password.trim());
 
     // Asegura que el campo 'status' tenga un valor por defecto
     user.status = true;

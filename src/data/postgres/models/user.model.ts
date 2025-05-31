@@ -47,6 +47,7 @@ export class User extends BaseEntity {
     nullable: false,
   })
   created_at: Date;
+  rol: any;
 
 }
 

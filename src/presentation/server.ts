@@ -1,8 +1,4 @@
 import express, { Request, Response, NextFunction, Router } from "express";
-import "reflect-metadata";
-import { PostgresDatabase } from "../data";
-import { envs } from "../config/env";
-
 
 interface Options {
   port: number;
@@ -20,39 +16,28 @@ export class Server {
   }
 
   async start() {
-    // 1) Conectar BD (configurada internamente con synchronize/logging si quieres)
-    const postgres = new PostgresDatabase({
-      username: envs.DATABASE_USERNAME,
-      password: envs.DATABASE_PASSWORD,
-      host: envs.DATABASE_HOST,
-      port: Number(envs.DATABASE_PORT),
-      database: envs.DATABASE_NAME,
-    });
-    await postgres.connect();
-
-    // 2) Middlewares
+    // Middlewares
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
-    // 3) Ping para comprobar servidor
+    // Ping
     this.app.get("/ping", (_req, res) => res.json({ pong: true }));
 
-    // 4) Montar rutas
+    // Routes
     this.app.use(this.routes);
 
-    // 5) 404 handler
+    // 404
     this.app.use((_req, res) => {
       res.status(404).json({ message: "Not Found" });
     });
 
-    // 6) Error handler global
-    // 4 args para que Express lo reconozca
+    // Global error handler
     this.app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       console.error("Unhandled error:", err.stack ?? err);
       res.status(500).json({ message: "Internal server error" });
     });
 
-    // 7) Arrancar
+    // Start server
     this.app.listen(this.port, () => {
       console.log(`🚀 Server running on http://localhost:${this.port}`);
     });

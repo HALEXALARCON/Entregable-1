@@ -7,6 +7,7 @@ import { ModifierPetPostService } from './services/modifier-pet-post.service';
 import { DeletePetPostService } from './services/delete-pet-post.services';
 import { handleError } from '../user/common/errors/handleError';
 
+
 export class PetPostController {
   constructor(
     private readonly creatorPetPostService: CreatorPetPostService,
