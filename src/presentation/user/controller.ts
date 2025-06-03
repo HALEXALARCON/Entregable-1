@@ -6,6 +6,7 @@ import { ModifierUserService } from './services/modifier-user.service';
 import { DeleteUserService } from './services/delete-user.service';
 import { handleError } from '../common/errors/handleError';
 import { loginUserDto, RegisterUserDto } from '../../domain/errors';
+import { envs } from '../../config/env';
 
 export class UserController {
   constructor(
@@ -43,6 +44,12 @@ export class UserController {
 
     try {
       const loginResult = await this.loginUserService.execute(loginData!);
+      res.cookie('token', loginResult.token, {
+        httpOnly: true,
+        secure: envs.app.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 3 * 60 * 60 * 1000,
+      })
       res.status(200).json(loginResult);
     } catch (error) {
       handleError(error, res);
