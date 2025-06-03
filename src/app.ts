@@ -8,21 +8,19 @@ import { Server } from "./presentation/server";
 
 async function main() {
   const postgres = new PostgresDatabase({
-    username: envs.DATABASE_USERNAME,
-    password: envs.DATABASE_PASSWORD,
-    host: envs.DATABASE_HOST,
-    port: Number(envs.DATABASE_PORT),
-    database: envs.DATABASE_NAME,
-  })
+    username: envs.db.USERNAME,
+    password: envs.db.PASSWORD,
+    host: envs.db.HOST,
+    port: envs.db.PORT,
+    database: envs.db.NAME,
+  });
   await postgres.connect();
 
   const server = new Server({
-    port: Number(envs.PORT),
-
+    port: envs.app.PORT,
     routes: AppRoutes.routes,
   });
   await server.start();
-
 }
 
 main();

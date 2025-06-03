@@ -18,7 +18,7 @@ export class LoginUserService {
   async execute(data: loginUserDto): Promise<LoginResponse> {
     const user = await this.ensureUserExist(data.email);
     await this.ensurePasswordIsCorrect(data.password, user.password);
-    const token = await this.generateToken({ id: user.id }, envs.JWT_EXPIRE_IN);
+    const token = await this.generateToken({ id: user.id }, envs.jwt.EXPIRE_IN);
     return {
       token,
       user: {

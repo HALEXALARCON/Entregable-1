@@ -4,7 +4,7 @@ import { LoginUserService } from './services/login-user.service';
 import { FinderUserService } from './services/finder-user.service';
 import { ModifierUserService } from './services/modifier-user.service';
 import { DeleteUserService } from './services/delete-user.service';
-import { handleError } from './common/errors/handleError';
+import { handleError } from '../common/errors/handleError';
 import { loginUserDto, RegisterUserDto } from '../../domain/errors';
 
 export class UserController {

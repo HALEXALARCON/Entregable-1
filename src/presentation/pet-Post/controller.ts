@@ -5,7 +5,7 @@ import { ApprovePetPostservice } from './services/aprove-pet-post.service';
 import { RejectedPetPostService } from './services/reject-pet-post.service';
 import { ModifierPetPostService } from './services/modifier-pet-post.service';
 import { DeletePetPostService } from './services/delete-pet-post.services';
-import { handleError } from '../user/common/errors/handleError';
+import { handleError } from '../common/errors/handleError';
 
 
 export class PetPostController {

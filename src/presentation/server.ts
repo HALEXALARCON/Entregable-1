@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction, Router } from "express";
+import cookieParser from "cookie-parser";
 
 interface Options {
   port: number;
@@ -19,6 +20,7 @@ export class Server {
     // Middlewares
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
 
     // Ping
     this.app.get("/ping", (_req, res) => res.json({ pong: true }));

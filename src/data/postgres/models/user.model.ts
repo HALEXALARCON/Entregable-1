@@ -1,11 +1,9 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-
 export enum userRole {
   USER = "user",
   ADMIN = "admin"
 }
-
 
 @Entity()
 export class User extends BaseEntity {
@@ -34,7 +32,7 @@ export class User extends BaseEntity {
     enum: userRole,
     default: userRole.USER,
   })
-  user: userRole;
+  rol: userRole;
 
   @Column("boolean", {
     nullable: false,
@@ -47,7 +45,4 @@ export class User extends BaseEntity {
     nullable: false,
   })
   created_at: Date;
-  rol: any;
-
 }
-

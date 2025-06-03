@@ -5,12 +5,13 @@ import { LoginUserService } from "./services/login-user.service";
 import { FinderUserService } from "./services/finder-user.service";
 import { DeleteUserService } from "./services/delete-user.service";
 import { ModifierUserService } from "./services/modifier-user.service";
+import { AuthMiddleware } from "../common/errors/middlewares.ts/auth.middleware";
 
 export class UserRoutes {
   static get routes(): Router {
     const router = Router();
 
-    // Instancia de servicios (puedes inyectar repositorios u otros deps aquí)
+    // Instancia de servicios
     const creatorUserService = new CreatorUserService();
     const loginUserService = new LoginUserService();
     const finderUserService = new FinderUserService();
@@ -26,10 +27,15 @@ export class UserRoutes {
       deleteUserService
     );
 
-    // Definición de rutas
-    router.get("/", controller.findAll);
+    // Rutas públicas
     router.post("/register", controller.register);
     router.post("/login", controller.login);
+
+    // Middleware de autenticación
+    router.use(AuthMiddleware.protect);
+
+    // Rutas protegidas
+    router.get("/", controller.findAll);
     router.get("/:id", controller.findOne);
     router.patch("/:id", controller.update);
     router.delete("/:id", controller.delete);
