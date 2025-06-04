@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../../../../config/jwt.adapter";
-import { User } from "../../../../data";
+import { User, userRole } from "../../../../data";
 
 export class AuthMiddleware {
   static async protect(req: Request, res: Response, next: NextFunction) {
@@ -11,13 +11,17 @@ export class AuthMiddleware {
       token = req.headers.authorization.split(' ')[1];
     }
 
-    if (!token) return res.status(401).json({
-      message: 'token not provided'
-    });
+    if (!token) {
+      return res.status(401).json({
+        message: 'token not provided'
+      });
+    }
 
     try {
       const payload = (await JwtAdapter.validateToken(token)) as { id: string };
-      if (!payload) return res.status(401).json({ message: 'invalid token' });
+      if (!payload) {
+        return res.status(401).json({ message: 'invalid token' });
+      }
 
       const user = await User.findOne({
         where: {
@@ -26,9 +30,11 @@ export class AuthMiddleware {
         }
       });
 
-      if (!user) return res.status(401).json({
-        message: 'invalid token'
-      });
+      if (!user) {
+        return res.status(401).json({
+          message: 'invalid token'
+        });
+      }
 
       req.body.sessionUser = user;
 
@@ -40,4 +46,15 @@ export class AuthMiddleware {
       });
     }
   }
+
+  static restrictToAdmin = (...roles: userRole[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (!roles.includes(req.body.sessionUser.rol)) {
+        return res.status(403).json({
+          message: 'you are not authorized to access this route'
+        });
+      }
+      next();
+    };
+  };
 }

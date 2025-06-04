@@ -6,6 +6,7 @@ import { FinderUserService } from "./services/finder-user.service";
 import { DeleteUserService } from "./services/delete-user.service";
 import { ModifierUserService } from "./services/modifier-user.service";
 import { AuthMiddleware } from "../common/errors/middlewares.ts/auth.middleware";
+import { userRole } from "../../data";
 
 export class UserRoutes {
   static get routes(): Router {
@@ -35,10 +36,10 @@ export class UserRoutes {
     router.use(AuthMiddleware.protect);
 
     // Rutas protegidas
-    router.get("/", controller.findAll);
     router.get("/:id", controller.findOne);
     router.patch("/:id", controller.update);
     router.delete("/:id", controller.delete);
+    router.get("/", AuthMiddleware.restrictToAdmin(userRole.ADMIN), controller.findAll);
 
     return router;
   }
