@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "./User.model";
 
 export enum petPostStatus {
   PENDING = "pending",
@@ -49,5 +50,9 @@ export class PetPost extends BaseEntity {
   })
   created_at: Date;
   static status: string;
+
+  @ManyToOne(() => User, (user) => user.petPosts)
+
+  user: User;
 
 }

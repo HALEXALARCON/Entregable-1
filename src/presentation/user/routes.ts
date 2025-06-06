@@ -32,14 +32,30 @@ export class UserRoutes {
     router.post("/register", controller.register);
     router.post("/login", controller.login);
 
-    // Middleware de autenticación
+    // Middleware de autenticación para rutas protegidas
     router.use(AuthMiddleware.protect);
 
     // Rutas protegidas
     router.get("/:id", controller.findOne);
-    router.patch("/:id", controller.update);
-    router.delete("/:id", controller.delete);
-    router.get("/", AuthMiddleware.restrictToAdmin(userRole.ADMIN), controller.findAll);
+
+    // Solo admin puede actualizar, eliminar o listar todos
+    router.patch(
+      "/:id",
+      AuthMiddleware.restrictToAdmin(userRole.ADMIN),
+      controller.update
+    );
+
+    router.delete(
+      "/:id",
+      AuthMiddleware.restrictToAdmin(userRole.ADMIN),
+      controller.delete
+    );
+
+    router.get(
+      "/",
+      AuthMiddleware.restrictToAdmin(userRole.ADMIN),
+      controller.findAll
+    );
 
     return router;
   }

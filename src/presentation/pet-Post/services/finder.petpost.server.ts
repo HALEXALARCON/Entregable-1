@@ -7,13 +7,35 @@ export class FinderPetPostService {
 
   async executeByFindAll() {
 
-    return await PetPost.find({
+    const petPosts = await PetPost.find({
 
       where: {
         status: petPostStatus.APPROVED,
+
         hasFound: false,
-      }
-    })
+      },
+
+      relations: {
+        user: true,
+      },
+
+      select: {
+        id: true,
+        petName: true,
+        description: true,
+        image_url: true,
+        status: true,
+        hasFound: true,
+
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    });
+
+    return petPosts;
   }
 
 

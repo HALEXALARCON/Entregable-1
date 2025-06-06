@@ -98,6 +98,7 @@ export class UserController {
       handleError(error, res);
     }
   };
+
 }
 
 export default UserController;
