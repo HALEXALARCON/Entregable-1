@@ -6,7 +6,9 @@ import { RejectedPetPostService } from './services/reject-pet-post.service';
 import { ModifierPetPostService } from './services/modifier-pet-post.service';
 import { DeletePetPostService } from './services/delete-pet-post.services';
 import { handleError } from '../common/errors/handleError';
-
+import { CreatePetDto } from '../../domain/dtos/pets/create-pets.dto';
+import { classToPlain } from 'class-transformer';
+import { User } from '../../data';
 
 export class PetPostController {
   constructor(
@@ -21,8 +23,24 @@ export class PetPostController {
   // Crear una nueva publicación de mascota
   create = async (req: Request, res: Response): Promise<void> => {
     try {
-      const petPost = await this.creatorPetPostService.execute(req.body);
-      res.status(201).json(petPost);
+      const [error, dto] = CreatePetDto.execute(req.body);
+      if (error) {
+        res.status(400).json({ error });
+        return;
+      }
+
+      const user = req.body.sessionUser as User; // ✅ CORREGIDO
+      if (!user) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+      }
+
+      const petPost = await this.creatorPetPostService.execute(dto, user); // ✅ CORREGIDO
+
+      // Convertir a JSON ocultando campos con @Exclude
+      const response = classToPlain(petPost);
+
+      res.status(201).json(response);
     } catch (error) {
       handleError(error, res);
     }
@@ -32,7 +50,8 @@ export class PetPostController {
   findAll = async (_req: Request, res: Response): Promise<void> => {
     try {
       const petPosts = await this.finderPetPostService.executeByFindAll();
-      res.status(200).json(petPosts);
+      const response = classToPlain(petPosts);
+      res.status(200).json(response);
     } catch (error) {
       handleError(error, res);
     }
@@ -47,7 +66,9 @@ export class PetPostController {
         res.status(404).json({ message: 'Pet post not found' });
         return;
       }
-      res.status(200).json(petPost);
+
+      const response = classToPlain(petPost);
+      res.status(200).json(response);
     } catch (error) {
       handleError(error, res);
     }

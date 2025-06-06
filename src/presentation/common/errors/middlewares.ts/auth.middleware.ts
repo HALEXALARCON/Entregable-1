@@ -37,9 +37,14 @@ export class AuthMiddleware {
         });
       }
 
+      if (!req.body) {
+        req.body = {}
+      }
+
       req.body.sessionUser = user;
       next();
     } catch (error) {
+      console.log("err", error)
       return res.status(500).json({
         message: "internal server error",
       });
@@ -49,13 +54,13 @@ export class AuthMiddleware {
   static restrictToAdmin = (...roles: userRole[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
       const user = req.body.sessionUser;
-
+      console.log('entro6')
       if (!user || !roles.includes(user.rol)) {
         return res.status(403).json({
           message: "you are not authorized to access this route",
         });
       }
-
+      console.log('entro5')
       next();
     };
   };

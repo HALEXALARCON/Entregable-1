@@ -1,5 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PetPost } from "./Pet-post-model";
+import { Exclude } from "class-transformer";
+
 
 export enum userRole {
   USER = "user",
@@ -27,6 +29,7 @@ export class User extends BaseEntity {
     length: 255,
     nullable: false,
   })
+  @Exclude()
   password: string;
 
   @Column("enum", {

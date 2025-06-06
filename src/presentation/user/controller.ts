@@ -92,6 +92,7 @@ export class UserController {
   delete = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
+      console.log("entro3")
       const result = await this.deleteUserService.execute(id);
       res.status(200).json(result);
     } catch (error) {
