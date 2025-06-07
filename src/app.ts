@@ -1,10 +1,8 @@
 import "reflect-metadata";
 import { PostgresDatabase } from "./data";
 import { envs } from "./config/env";
-import { AppRoutes } from "./presentation/routes";
+import { routes } from "./presentation/routes";
 import { Server } from "./presentation/server";
-
-
 
 async function main() {
   const postgres = new PostgresDatabase({
@@ -14,14 +12,15 @@ async function main() {
     port: envs.db.PORT,
     database: envs.db.NAME,
   });
+
   await postgres.connect();
 
   const server = new Server({
     port: envs.app.PORT,
-    routes: AppRoutes.routes,
+    routes,
   });
+
   await server.start();
 }
 
 main();
-

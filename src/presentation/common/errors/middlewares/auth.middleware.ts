@@ -13,7 +13,7 @@ export class AuthMiddleware {
 
     if (!token) {
       return res.status(401).json({
-        message: "token not provided",
+        message: "Token not provided",
       });
     }
 
@@ -21,7 +21,7 @@ export class AuthMiddleware {
       const payload = (await JwtAdapter.validateToken(token)) as { id: string };
 
       if (!payload) {
-        return res.status(401).json({ message: "invalid token" });
+        return res.status(401).json({ message: "Invalid token" });
       }
 
       const user = await User.findOne({
@@ -33,20 +33,22 @@ export class AuthMiddleware {
 
       if (!user) {
         return res.status(401).json({
-          message: "invalid token",
+          message: "Invalid token",
         });
       }
 
+      // Aseguramos que req.body exista
       if (!req.body) {
-        req.body = {}
+        req.body = {};
       }
 
+      // Guardamos el usuario en el request para uso posterior
       req.body.sessionUser = user;
       next();
     } catch (error) {
-      console.log("err", error)
+      console.error("Auth error:", error);
       return res.status(500).json({
-        message: "internal server error",
+        message: "Internal server error",
       });
     }
   }
@@ -54,13 +56,13 @@ export class AuthMiddleware {
   static restrictToAdmin = (...roles: userRole[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
       const user = req.body.sessionUser;
-      console.log('entro6')
+
       if (!user || !roles.includes(user.rol)) {
         return res.status(403).json({
-          message: "you are not authorized to access this route",
+          message: "You are not authorized to access this route",
         });
       }
-      console.log('entro5')
+
       next();
     };
   };

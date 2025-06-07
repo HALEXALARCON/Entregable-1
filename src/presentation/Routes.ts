@@ -1,17 +1,17 @@
 import { Router } from "express";
 import { UserRoutes } from "./user/routes";
 import { petPostRoutes } from "./pet-Post/router";
-import { AuthMiddleware } from "./common/errors/middlewares.ts/auth.middleware";
+import { AuthMiddleware } from "./common/errors/middlewares/auth.middleware";
 
-export class AppRoutes {
 
-  static get routes() {
+// Creamos el router principal
+const router = Router();
 
-    const router = Router();
+// Rutas públicas
+router.use("/api/users", UserRoutes.routes);
 
-    router.use('/api/users', UserRoutes.routes);
-    router.use('/api/pet-posts', AuthMiddleware.protect, petPostRoutes.routes);
+// Rutas protegidas (requieren autenticación)
+router.use("/api/pet-posts", AuthMiddleware.protect, petPostRoutes.routes);
 
-    return router;
-  }
-}
+// Exportamos el router
+export const routes = router;
