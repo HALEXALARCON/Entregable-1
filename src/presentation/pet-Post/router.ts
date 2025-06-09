@@ -19,7 +19,7 @@ export class petPostRoutes {
     const creatorPetPostService = new CreatorPetPostService();
     const finderPetPostService = new FinderPetPostService();
     const approvePetPostService = new ApprovePetPostservice(finderPetPostService);
-    const rejectPetPostService = new RejectedPetPostService(finderPetPostService);  // <-- nombre corregido
+    const rejectPetPostService = new RejectedPetPostService(finderPetPostService);
     const modifierPetPostService = new ModifierPetPostService();
     const deletePetPostService = new DeletePetPostService();
 

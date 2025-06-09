@@ -1,7 +1,7 @@
 import { Server } from './presentation/server';
 import { envs } from './config/env';
-import { routes } from './presentation/routes'; // Ajusta según tu estructura
-import { postgres } from './data'; // Conexión a la base de datos
+import { routes } from './presentation/routes';
+import { postgres } from './data';
 
 
 const main = async () => {
