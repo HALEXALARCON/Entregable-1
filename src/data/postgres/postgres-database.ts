@@ -9,42 +9,13 @@ interface Options {
   password: string;
   database: string;
 }
-/**
- * Clase para gestionar la conexión a la base de datos PostgresSQL utilizando TypeORM.
- *
- * @remarks
- * Esta clase configura y establece la conexión a una base de datos PostgresSQL utilizando TypeORM.
- *
- * La conexion se configura para sincroizar la base de datos y utilizar SSL con rechazo de certificado no autorizado, en desarrollo.
- *
- * @example
- * ```typescript
- * const postgres = new PostgresDatabase({
- *   host: "localhost",
- *   port: 5432,
- *   username: "user",
- *   password: "password",
- *   database: "database",
- * });
- *
- * await postgres.connect();
- * ```
- */
+
 export class PostgresDatabase {
   public datasource: DataSource;
 
-  /**
-   * Crea una instancia de la clase PostgresDatabase.
-   *
-   * @param options - Opciones de configuración para la conexión a la base de datos.
-   * @param options.host - Host de la base de datos.
-   * @param options.port - Puerto de la base de datos.
-   * @param options.username - Nombre de usuario para la conexión a la base de datos.
-   * @param options.password - Contraseña para la conexión a la base de datos.
-   * @param options.database - Nombre de la base de datos.
-   */
   constructor(options: Options) {
-    // console.log('options', options)
+    const isProduction = process.env.NODE_ENV === 'production';
+
     this.datasource = new DataSource({
       type: 'postgres',
       host: options.host,
@@ -53,25 +24,23 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       synchronize: true,
+      logging: true,
       entities: [User, PetPost],
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: isProduction
+        ? { rejectUnauthorized: false }
+        : false, // ⚠️ No usar SSL en desarrollo
     });
   }
 
-  /**
-   * Establece la conexión a la base de datos.
-   *
-   * @returns {Promise<void>} - Una promesa que se resuelve cuando la conexión se ha establecido correctamente.
-   * @throws {Error} - Si ocurre un error al intentar conectar a la base de datos.
-   */
   async connect() {
     try {
-      await this.datasource.initialize();
-      console.log('Postgres database connected!');
+      if (!this.datasource.isInitialized) {
+        await this.datasource.initialize();
+        console.log('✅ Postgres database connected!');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('❌ Error al conectar a la base de datos:', error);
+      throw error;
     }
   }
 }

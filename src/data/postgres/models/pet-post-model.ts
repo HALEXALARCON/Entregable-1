@@ -1,58 +1,50 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from "typeorm";
 import { User } from "./User.model";
 
-export enum petPostStatus {
+// ✅ Enum definido correctamente y exportado
+export enum PetPostStatus {
   PENDING = "pending",
   APPROVED = "approved",
   REJECTED = "rejected",
-  ACTIVE = "active",
-  INACTIVE = "inactive",
 }
-
 
 @Entity()
 export class PetPost extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("varchar", {
-    length: 60,
-    nullable: false,
-  })
+  @Column("varchar", { length: 60, nullable: false })
   petName: string;
 
-  @Column("text", {
-    nullable: false,
-  })
+  @Column("text", { nullable: false })
   description: string;
 
-  @Column("varchar", {
-    length: 255,
-    nullable: false,
-  })
+  @Column("varchar", { length: 255, nullable: false })
   image_url: string;
 
   @Column("enum", {
-    enum: petPostStatus,
-    default: petPostStatus.PENDING,
+    enum: PetPostStatus,
+    default: PetPostStatus.PENDING,
   })
-  status: petPostStatus;
+  status: PetPostStatus;
 
-  @Column("boolean", {
-    nullable: false,
-    default: false,
-  })
+  @Column("boolean", { nullable: false, default: false })
   hasFound: boolean;
 
   @Column("timestamp", {
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => "CURRENT_TIMESTAMP",
     nullable: false,
   })
   created_at: Date;
-  static status: string;
 
   @ManyToOne(() => User, (user) => user.petPosts)
-
+  @JoinColumn({ name: "userId" }) // 👈 nombre claro en la columna
   user: User;
-
 }
