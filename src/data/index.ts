@@ -1,8 +1,6 @@
 import { envs } from '../config/env';
 import { PostgresDatabase } from './postgres/postgres-database';
 
-
-// Instancia global de la base de datos
 export const postgres = new PostgresDatabase({
   username: envs.db.USERNAME,
   password: envs.db.PASSWORD,

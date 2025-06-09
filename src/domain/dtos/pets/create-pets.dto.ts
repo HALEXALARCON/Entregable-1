@@ -7,7 +7,6 @@ export class CreatePetDto {
 
   static execute(object: { [key: string]: any }): [string?, CreatePetDto?] {
     const { petName, description, image_url } = object;
-    console.log(object);
 
     if (typeof petName !== 'string' || !petName.trim()) {
       return ['Pet name is required'];

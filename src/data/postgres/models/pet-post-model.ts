@@ -8,11 +8,11 @@ import {
 } from "typeorm";
 import { User } from "./User.model";
 
-// ✅ Enum definido correctamente y exportado
 export enum PetPostStatus {
   PENDING = "pending",
   APPROVED = "approved",
   REJECTED = "rejected",
+  INACTIVE = "inactive",
 }
 
 @Entity()
@@ -45,6 +45,7 @@ export class PetPost extends BaseEntity {
   created_at: Date;
 
   @ManyToOne(() => User, (user) => user.petPosts)
-  @JoinColumn({ name: "userId" }) // 👈 nombre claro en la columna
+  @JoinColumn({ name: "userId" })
   user: User;
+  static status: string;
 }

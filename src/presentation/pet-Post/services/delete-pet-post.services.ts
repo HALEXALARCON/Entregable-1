@@ -1,5 +1,5 @@
 import { PetPost } from "../../../data";
-import { petPostStatus } from "../../../data";
+import { PetPostStatus } from "../../../data";
 
 export class DeletePetPostService {
   async execute(id: string): Promise<{ message: string }> {
@@ -9,11 +9,11 @@ export class DeletePetPostService {
       throw new Error("Pet post not found");
     }
 
-    if (petPost.status === petPostStatus.INACTIVE) {
+    if (petPost.status === PetPostStatus.INACTIVE) {
       throw new Error("Pet post is already inactive");
     }
 
-    petPost.status = petPostStatus.INACTIVE;
+    petPost.status = PetPostStatus.INACTIVE;
 
     try {
       await petPost.save();

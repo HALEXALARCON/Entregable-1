@@ -1,11 +1,16 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { PetPost } from "./Pet-post-model";
 import { Exclude } from "class-transformer";
 
-
 export enum userRole {
   USER = "user",
-  ADMIN = "admin"
+  ADMIN = "admin",
 }
 
 @Entity()
@@ -44,14 +49,12 @@ export class User extends BaseEntity {
   })
   status: boolean;
 
-  @Column('timestamp', {
-    default: () => 'CURRENT_TIMESTAMP',
+  @Column("timestamp", {
+    default: () => "CURRENT_TIMESTAMP",
     nullable: false,
   })
   created_at: Date;
 
-
   @OneToMany(() => PetPost, (petPost) => petPost.user)
-
   petPosts: PetPost[];
 }

@@ -1,4 +1,4 @@
-import { PetPost, petPostStatus } from "../../../data";
+import { PetPost, PetPostStatus } from "../../../data";
 import { CustomError } from "../../../domain/errors";
 import { instanceToPlain } from "class-transformer";
 
@@ -8,7 +8,7 @@ export class FinderPetPostService {
 
     const petPosts = await PetPost.find({
       where: {
-        status: petPostStatus.APPROVED,
+        status: PetPostStatus.APPROVED,
         hasFound: false,
       },
       relations: {
@@ -29,7 +29,7 @@ export class FinderPetPostService {
       },
     });
 
-    return instanceToPlain(petPosts); // <-- Aplica Exclude()
+    return instanceToPlain(petPosts);
   }
 
   async executeByFindOne(id: string) {
@@ -58,6 +58,6 @@ export class FinderPetPostService {
       throw CustomError.notFound('pet not found');
     }
 
-    return instanceToPlain(petPost); // <-- Aplica Exclude()
+    return instanceToPlain(petPost);
   }
 }

@@ -24,29 +24,31 @@ export class PetPostController {
   create = async (req: Request, res: Response): Promise<void> => {
     try {
       const [error, dto] = CreatePetDto.execute(req.body);
+
       if (error) {
         res.status(400).json({ error });
         return;
       }
 
-      const user = req.body.sessionUser as User; // ✅ CORREGIDO
+      if (!dto) {
+        res.status(500).json({ error: 'Unexpected DTO error' });
+        return;
+      }
+
+      const user = req.body.sessionUser as User;
       if (!user) {
         res.status(401).json({ error: 'Unauthorized' });
         return;
       }
 
-      const petPost = await this.creatorPetPostService.execute(dto, user); // ✅ CORREGIDO
-
-      // Convertir a JSON ocultando campos con @Exclude
+      const petPost = await this.creatorPetPostService.execute(dto, user);
       const response = classToPlain(petPost);
-
       res.status(201).json(response);
     } catch (error) {
       handleError(error, res);
     }
   };
 
-  // Obtener todas las publicaciones de mascotas
   findAll = async (_req: Request, res: Response): Promise<void> => {
     try {
       const petPosts = await this.finderPetPostService.executeByFindAll();
@@ -57,7 +59,6 @@ export class PetPostController {
     }
   };
 
-  // Obtener una publicación de mascota por ID
   findOne = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -74,7 +75,6 @@ export class PetPostController {
     }
   };
 
-  // Aprobar una publicación de mascota
   approve = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -85,7 +85,6 @@ export class PetPostController {
     }
   };
 
-  // Rechazar una publicación de mascota
   rejected = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -96,7 +95,6 @@ export class PetPostController {
     }
   };
 
-  // Actualizar una publicación de mascota
   update = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -107,7 +105,6 @@ export class PetPostController {
     }
   };
 
-  // Eliminar una publicación de mascota
   delete = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;

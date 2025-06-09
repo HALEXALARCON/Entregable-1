@@ -14,7 +14,7 @@ export class PostgresDatabase {
   public datasource: DataSource;
 
   constructor(options: Options) {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const isProduction = process.env.NODE_ENV === 'production' || true;
 
     this.datasource = new DataSource({
       type: 'postgres',
@@ -26,9 +26,14 @@ export class PostgresDatabase {
       synchronize: true,
       logging: true,
       entities: [User, PetPost],
-      ssl: isProduction
-        ? { rejectUnauthorized: false }
-        : false, // ⚠️ No usar SSL en desarrollo
+
+      // ⚠️ Configuración SSL para Neon
+      ssl: true,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false, // Neon usa certificados self-signed
+        },
+      },
     });
   }
 
