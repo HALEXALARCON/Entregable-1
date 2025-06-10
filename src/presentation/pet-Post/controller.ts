@@ -30,10 +30,7 @@ export class PetPostController {
         return;
       }
 
-      if (!dto) {
-        res.status(500).json({ error: 'Unexpected DTO error' });
-        return;
-      }
+
 
       const user = req.body.sessionUser as User;
       if (!user) {
@@ -41,7 +38,7 @@ export class PetPostController {
         return;
       }
 
-      const petPost = await this.creatorPetPostService.execute(dto, user);
+      const petPost = await this.creatorPetPostService.execute(dto!, user);
       const response = classToPlain(petPost);
       res.status(201).json(response);
     } catch (error) {
@@ -98,9 +95,11 @@ export class PetPostController {
   update = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
+      console.log(req.body)
       const updatedPetPost = await this.modifierPetPostService.update(id, req.body);
       res.status(200).json(updatedPetPost);
     } catch (error) {
+      console.log(error)
       handleError(error, res);
     }
   };

@@ -82,9 +82,11 @@ export class UserController {
   update = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
+      console.log(req.body)
       const updatedUser = await this.modifierUserService.update(id, req.body);
       res.status(200).json(updatedUser);
     } catch (error) {
+      console.log(error)
       handleError(error, res);
     }
   };

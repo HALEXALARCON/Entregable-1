@@ -24,7 +24,7 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       synchronize: true,
-      logging: true,
+      logging: false,
       entities: [User, PetPost],
 
       // ⚠️ Configuración SSL para Neon
